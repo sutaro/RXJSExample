@@ -15,4 +15,4 @@ export const App: React.StatelessComponent<{}> =(props)=> {
     );
 };
 
-export default withRouter((App));
+export default App;///withRouter((App));

@@ -1,38 +1,57 @@
-import { IAuthor } from "../../models/author";
-import AuthorList from "./authorList";
+import {IAuthor} from "../../models/author";
+import AuthorList, {IAuthorListProps} from "./authorList";
 
 "use strict";
 import * as React from 'react';
-import { Link } from "react-router-dom";
-import {AuthorApi} from '../../api/authorApi';
+import {Link} from "react-router-dom";
+import {IStores} from "../../compose";
 
-export interface IAuthorProps{
+export interface IAuthorProps {
+  stores: IStores;
 }
 
-export interface IAuthorState{
-	authors:IAuthor[];
-  authorApi:AuthorApi;
+export interface IAuthorState {
+  authorListProps: IAuthorListProps;
 }
 
-export class AuthorPage extends React.Component<IAuthorProps,IAuthorState>{
-	constructor(props:IAuthorProps){
-		super(props);
-		this.state={authors:[], authorApi: new AuthorApi()};
-	}
+export class AuthorPage extends React.Component<IAuthorProps, IAuthorState> {
+  private subscriptions: Rx.Disposable[];
 
-	async componentDidMount() {
-		const authors = await this.state.authorApi.getAllAuthors();
-		this.state.authorApi.getAllAuthors()
-		.then((authors)=>this.setState({authors:authors}));
-	}
+  constructor(props: IAuthorProps) {
+    super(props);
+    this.subscriptions = [];
+    this.state = {
+      authorListProps: {authors: []}
+    };
+  }
 
-	render():JSX.Element {
-		return <div>
-				<h1>Authors</h1>
-				<Link to="authors/addAuthor" className="btn btn-default">Add Author</Link>
-				<AuthorList authors={this.state.authors} />
-			</div>;
-	}
+  componentDidMount() {
+    const authorListsPropsObservable: Rx.Observable<IAuthorListProps> = this.props.stores.users.getAuthors()
+      .map(authors => {
+        return {authors: authors}
+      });
+
+    const state: Rx.Observable<IAuthorState> = authorListsPropsObservable
+      .map(authorListsProps => {
+        return {authorListProps: authorListsProps}
+      });
+    this.subscriptions.push(state.subscribe(s => this.setState(s)));
+
+  }
+
+  componentWillUnmount() {
+    this.subscriptions.forEach(s => s.dispose());
+    this.subscriptions = [];
+
+  }
+
+  render(): JSX.Element {
+    return <div>
+      <h1>Authors</h1>
+      <Link to="addAuthor" className="btn btn-default">Add Author</Link>
+      <AuthorList {...this.state.authorListProps}/>
+    </div>;
+  }
 };
 
 export default AuthorPage;
