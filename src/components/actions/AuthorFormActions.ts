@@ -4,13 +4,13 @@ import * as Rx from 'rx';
 export interface IAuthorFormActions {
   selectedFirstName: Rx.Subject<string>;
   selectedLastName: Rx.Subject<string>;
-  save: Rx.Subject<{}>;
+  save: Rx.Subject<string>;
 }
 
 const authorFormActions: IAuthorFormActions = {
-  selectedFirstName: Action.create<string>("IAuthorFormActions.save"),
-  selectedLastName: Action.create<string>("IAuthorFormActions.save"),
-  save: Action.create<{}>("IAuthorFormActions.save")
+  selectedFirstName: Action.create<string>("IAuthorFormActions.selectedFirstName"),
+  selectedLastName: Action.create<string>("IAuthorFormActions.selectedLastName"),
+  save: Action.create<string>("IAuthorFormActions.save")
 };
 
 export default authorFormActions;

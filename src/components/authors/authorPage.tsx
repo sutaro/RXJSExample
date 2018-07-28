@@ -1,4 +1,3 @@
-import {IAuthor} from "../../models/author";
 import AuthorList, {IAuthorListProps} from "./authorList";
 
 "use strict";
@@ -26,7 +25,7 @@ export class AuthorPage extends React.Component<IAuthorProps, IAuthorState> {
   }
 
   componentDidMount() {
-    const authorListsPropsObservable: Rx.Observable<IAuthorListProps> = this.props.stores.users.getAuthors()
+    const authorListsPropsObservable: Rx.Observable<IAuthorListProps> = this.props.stores.authors.getAuthors()
       .map(authors => {
         return {authors: authors}
       });
@@ -42,13 +41,12 @@ export class AuthorPage extends React.Component<IAuthorProps, IAuthorState> {
   componentWillUnmount() {
     this.subscriptions.forEach(s => s.dispose());
     this.subscriptions = [];
-
   }
 
   render(): JSX.Element {
     return <div>
       <h1>Authors</h1>
-      <Link to="addAuthor" className="btn btn-default">Add Author</Link>
+      <Link to="/author" className="btn btn-default">Add Author</Link>
       <AuthorList {...this.state.authorListProps}/>
     </div>;
   }

@@ -24,7 +24,7 @@ export class AuthorList extends React.Component<IAuthorListProps> {
         <tbody>
         {this.props.authors.map(author =>
           <tr key={author.id}>
-            <td><Link to={`authors/${author.id}`}>{author.id}</Link></td>
+            <td><Link to={`/author/${author.id}`}>{author.id}</Link></td>
             <td>{author.firstName} {author.lastName}</td>
           </tr>)}
         </tbody>

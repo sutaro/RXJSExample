@@ -5,8 +5,7 @@ import { IAuthor } from '../../models/author';
 import authorFormActions from "../actions/AuthorFormActions";
 
 export interface IAuthorFormProps{
-	author:	IAuthor,
-		errors: any
+	author:	IAuthor
 }
 export class AuthorForm extends React.Component<IAuthorFormProps,{}>{
 	render() {
@@ -14,33 +13,31 @@ export class AuthorForm extends React.Component<IAuthorFormProps,{}>{
 			<form>
 				<h1>Manage Author</h1>
 
-        <div className={this.props.errors && this.props.errors.firstName ?' has-error': ''}>
+        <div>
           <label htmlFor={this.props.author.firstName}>First Name</label>
           <div className="field">
             <input type="text"
                    name={this.props.author.firstName}
                    className="form-control"
                    placeholder="First Name"
-                   ref={this.props.author.firstName}
                    value={this.props.author.firstName}
-                   onChange={()=> authorFormActions.selectedFirstName.onNext(this.props.author.firstName)}/>
+                   onChange={event=> {authorFormActions.selectedFirstName.onNext(event.currentTarget.value);}}
+						/>
           </div>
         </div>
 
-				<div className={this.props.errors && this.props.errors.lastName ?' has-error': ''}>
-          <label htmlFor={this.props.author.lastName}>First Name</label>
+				<div>
+          <label htmlFor={this.props.author.lastName}>Last Name</label>
           <div className="field">
             <input type="text"
                    name={this.props.author.lastName}
                    className="form-control"
                    placeholder="Last Name"
-                   ref={this.props.author.lastName}
                    value={this.props.author.lastName}
-									onChange={()=> authorFormActions.selectedLastName.onNext(this.props.author.lastName)}/>
+									onChange={event=> authorFormActions.selectedLastName.onNext(event.currentTarget.value)}/>
           </div>
         </div>
-
-				<input type="button" value="Save" className="btn btn-default" onClick={()=> authorFormActions.save.onNext({})} />
+				<input type="button" value="Save" className="btn btn-default" onClick={()=> {authorFormActions.save.onNext(this.props.author.id)}} />
 			</form>
 		);
 	}

@@ -1,23 +1,28 @@
-import {IUserStore, UsersStore} from "./stores/usersStore";
 import authorFormActions from "./components/actions/AuthorFormActions";
 import AuthorApi from "./api/authorApi";
+import {default as AuthorsStore, IAuthorsStore} from "./stores/AuthorsStore";
+import {default as AuthorRequestStore, IAuthorRequestStore} from "./stores/AuthorRequestStore";
 
 export interface IStores {
-  users: IUserStore;
+  authors: IAuthorsStore;
+  authorRequests: IAuthorRequestStore;
 }
 
 export interface IServices {
-
 }
+
 export interface IComposition {
   stores: IStores;
   services: IServices;
 }
-export default function compose():IComposition{
-  const usersStore = new UsersStore(authorFormActions, new AuthorApi(), Rx.Scheduler.default);
+
+export default function compose(): IComposition {
+  const authorRequests = new AuthorRequestStore(authorFormActions);
+  const authorsStore = new AuthorsStore(authorFormActions, new AuthorApi(), Rx.Scheduler.default);
   const composition: IComposition = {
     stores: {
-      users: usersStore
+      authors: authorsStore,
+      authorRequests: authorRequests
     },
     services: {}
   };
